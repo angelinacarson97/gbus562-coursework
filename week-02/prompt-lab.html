@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt Lab · GBUS562 Week 2</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --panel: #ffffff;
+    --text: #1d2330;
+    --muted: #667085;
+    --border: #d9dde5;
+    --accent: #3b5bdb;
+    --accent-hover: #2f49b3;
+    --you-bg: #e8edff;
+    --claude-bg: #f1f3f6;
+    --system-bg: #fff6e0;
+    --error-bg: #fdecec;
+    --error-text: #9b1c1c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14171f;
+      --panel: #1c2029;
+      --text: #e8eaf0;
+      --muted: #9aa3b5;
+      --border: #333a49;
+      --accent: #7c94ff;
+      --accent-hover: #9aaeff;
+      --you-bg: #26304f;
+      --claude-bg: #252a36;
+      --system-bg: #3a3320;
+      --error-bg: #3d2020;
+      --error-text: #ffb4b4;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .app {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 20px 16px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 100%;
+  }
+  header { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  h1 { font-size: 1.4rem; margin: 0; }
+  .model-badge {
+    font-size: 0.8rem; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+  .hint { font-size: 0.78rem; color: var(--muted); margin: 4px 0 0; }
+  input[type="password"], input[type="text"], textarea, select {
+    width: 100%;
+    font: inherit;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  textarea { resize: vertical; }
+  input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  .row { display: flex; gap: 8px; align-items: stretch; }
+  .row > input { flex: 1; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  button {
+    font: inherit; font-weight: 600; cursor: pointer;
+    border-radius: 8px; padding: 8px 14px;
+    border: 1px solid var(--border);
+    background: var(--panel); color: var(--text);
+  }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
+  .toolbar .spacer { flex: 1; }
+  #conversation {
+    min-height: 220px;
+    max-height: 52vh;
+    overflow-y: auto;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .empty { color: var(--muted); text-align: center; margin: auto; padding: 24px 8px; }
+  .msg { border-radius: 10px; padding: 10px 12px; max-width: 92%; }
+  .msg .who { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+  .msg .body { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .msg.you { background: var(--you-bg); align-self: flex-end; }
+  .msg.claude { background: var(--claude-bg); align-self: flex-start; }
+  .msg.system { background: var(--system-bg); align-self: stretch; max-width: 100%; }
+  .msg.pending .body { color: var(--muted); font-style: italic; }
+  #status { min-height: 1.3em; font-size: 0.85rem; color: var(--muted); }
+  #status.error {
+    background: var(--error-bg); color: var(--error-text);
+    border-radius: 8px; padding: 8px 10px;
+  }
+  .send-row { display: flex; gap: 8px; align-items: flex-end; margin-top: 10px; }
+  .send-row textarea { flex: 1; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Prompt Lab</h1>
+    <span class="model-badge" id="modelBadge"></span>
+  </header>
+
+  <section class="card" aria-labelledby="setupHeading">
+    <h2 id="setupHeading" style="font-size:1rem;margin:0 0 10px">Setup</h2>
+
+    <label for="apiKey">Anthropic API key</label>
+    <div class="row">
+      <input type="password" id="apiKey" autocomplete="off" spellcheck="false"
+             placeholder="Paste your API key" aria-describedby="keyHint">
+      <button type="button" id="toggleKey" aria-pressed="false">Show</button>
+    </div>
+    <p class="hint" id="keyHint">Held in this page's memory only. It is never saved, never written to the export,
+      and is gone when you reload or close the tab.</p>
+
+    <div class="grid-2" style="margin-top:12px">
+      <div>
+        <label for="technique">Technique starter (optional)</label>
+        <select id="technique">
+          <option value="custom">Custom (blank)</option>
+          <option value="zero-shot">Zero-shot (baseline)</option>
+          <option value="few-shot">Few-shot examples</option>
+          <option value="chain-of-thought">Chain-of-thought</option>
+          <option value="role-prompting">Role / system prompting</option>
+        </select>
+        <p class="hint">Fills the fields below. Available only before the conversation starts.</p>
+      </div>
+      <div>
+        <label for="systemPrompt">System prompt (optional)</label>
+        <textarea id="systemPrompt" rows="3" placeholder="e.g. You are a pricing strategist…"></textarea>
+        <p class="hint" id="systemHint">Locked once the conversation starts.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="convHeading">
+    <div class="toolbar" style="margin-bottom:10px">
+      <h2 id="convHeading" style="font-size:1rem;margin:0;align-self:center">Conversation</h2>
+      <span class="spacer"></span>
+      <button type="button" id="newBtn">New Conversation</button>
+      <button type="button" id="exportBtn" disabled>Export</button>
+    </div>
+
+    <div id="conversation" role="log" aria-live="polite" aria-label="Conversation">
+      <div class="empty" id="emptyState">No messages yet. Enter a prompt below and press Send.</div>
+    </div>
+
+    <div id="status" role="status"></div>
+
+    <div class="send-row">
+      <div style="flex:1">
+        <label for="prompt">Your prompt</label>
+        <textarea id="prompt" rows="4" placeholder="Type your prompt. Ctrl/Cmd + Enter to send."></textarea>
+      </div>
+      <button type="button" class="primary" id="sendBtn">Send</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---- Configuration -------------------------------------------------------
+  var MODEL = "claude-sonnet-5";          // required by the assignment
+  var API_URL = "https://api.anthropic.com/v1/messages";
+  var API_VERSION = "2023-06-01";
+  var MAX_TOKENS = 2048;
+
+  // One shared business question so the four techniques can be compared fairly.
+  var QUESTION = "A neighborhood coffee shop sells about 400 drinks a day at an average price of $5. " +
+    "The owner is considering raising all prices by 10%. Should the owner do it?";
+
+  var TECHNIQUES = {
+    "custom": { system: "", prompt: "" },
+    "zero-shot": {
+      system: "",
+      prompt: QUESTION
+    },
+    "few-shot": {
+      system: "You are a business analyst. Answer in exactly the same three-line format as the examples.",
+      prompt:
+        "Example 1\n" +
+        "Question: A bakery is considering adding home delivery. Should it?\n" +
+        "Decision: Yes, as a limited pilot.\n" +
+        "Main reason: Delivery reaches customers who do not walk past the shop.\n" +
+        "Key risk: Delivery costs could erase the margin on small orders.\n\n" +
+        "Example 2\n" +
+        "Question: A gym is considering cutting its weekend hours. Should it?\n" +
+        "Decision: No.\n" +
+        "Main reason: Weekends are when most members actually visit.\n" +
+        "Key risk: Members may cancel, and the lost fees exceed the labor saved.\n\n" +
+        "Now answer this one.\n" +
+        "Question: " + QUESTION
+    },
+    "chain-of-thought": {
+      system: "",
+      prompt: QUESTION + "\n\nThink through this step by step. Work through the revenue math, how sensitive " +
+        "customers are likely to be to price, and the competition, showing your reasoning. " +
+        "Then give a final recommendation."
+    },
+    "role-prompting": {
+      system: "You are a pricing strategist with 15 years of experience advising independent food-and-beverage " +
+        "businesses. Be direct, quantify where you can, and state your assumptions.",
+      prompt: QUESTION
+    }
+  };
+
+  // ---- State (in memory only; nothing is written to storage) ---------------
+  var messages = [];          // {role: "user"|"assistant", content: string}
+  var systemPrompt = "";      // locked copy used for the active conversation
+  var technique = "custom";
+  var busy = false;
+
+  // ---- Elements ------------------------------------------------------------
+  var $ = function (id) { return document.getElementById(id); };
+  var keyInput = $("apiKey"), toggleKey = $("toggleKey"), techSel = $("technique"),
+      sysInput = $("systemPrompt"), sysHint = $("systemHint"), convo = $("conversation"),
+      statusEl = $("status"), promptInput = $("prompt"), sendBtn = $("sendBtn"),
+      newBtn = $("newBtn"), exportBtn = $("exportBtn");
+
+  $("modelBadge").textContent = MODEL;
+
+  // ---- Helpers -------------------------------------------------------------
+  function setStatus(text, isError) {
+    statusEl.textContent = text || "";
+    statusEl.className = isError ? "error" : "";
+  }
+
+  function addBubble(kind, label, text, extraClass) {
+    var empty = $("emptyState");
+    if (empty) empty.remove();
+    var div = document.createElement("div");
+    div.className = "msg " + kind + (extraClass ? " " + extraClass : "");
+    var who = document.createElement("div");
+    who.className = "who";
+    who.textContent = label;
+    var body = document.createElement("div");
+    body.className = "body";
+    body.textContent = text;           // textContent: never interpreted as HTML
+    div.appendChild(who);
+    div.appendChild(body);
+    convo.appendChild(div);
+    convo.scrollTop = convo.scrollHeight;
+    return div;
+  }
+
+  function refreshControls() {
+    var started = messages.length > 0;
+    sendBtn.disabled = busy;
+    newBtn.disabled = busy;
+    exportBtn.disabled = busy || !started;
+    sysInput.disabled = started || busy;
+    techSel.disabled = started || busy;
+    sysHint.textContent = started ? "Locked for this conversation. Use New Conversation to change it."
+                                  : "Locked once the conversation starts.";
+  }
+
+  function slug(s) { return s.replace(/[^a-z0-9-]+/gi, "-").toLowerCase(); }
+
+  function timestamp() {
+    var d = new Date(), p = function (n) { return String(n).padStart(2, "0"); };
+    return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "-" +
+           p(d.getHours()) + p(d.getMinutes()) + p(d.getSeconds());
+  }
+
+  // ---- Markdown export -----------------------------------------------------
+  function buildMarkdown() {
+    var out = [];
+    out.push("Model: " + MODEL);
+    out.push("");
+    out.push("Exported: " + new Date().toISOString());
+    out.push("");
+    out.push("## System");
+    out.push("");
+    out.push(systemPrompt ? systemPrompt : "_(none)_");
+    out.push("");
+    messages.forEach(function (m) {
+      out.push(m.role === "user" ? "## You" : "## Claude");
+      out.push("");
+      out.push(m.content);
+      out.push("");
+    });
+    return out.join("\n");
+  }
+
+  function doExport() {
+    if (!messages.length) return;
+    var blob = new Blob([buildMarkdown()], { type: "text/markdown;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "prompt-lab-" + slug(technique) + "-" + timestamp() + ".md";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    setStatus("Exported " + a.download);
+  }
+
+  // ---- Sending -------------------------------------------------------------
+  async function send() {
+    if (busy) return;
+    var key = keyInput.value.trim();
+    var text = promptInput.value.trim();
+    if (!key) { setStatus("Enter your Anthropic API key first.", true); keyInput.focus(); return; }
+    if (!text) { setStatus("Type a prompt to send.", true); promptInput.focus(); return; }
+
+    var firstMessage = messages.length === 0;
+    if (firstMessage) {
+      systemPrompt = sysInput.value.trim();
+      if (systemPrompt) addBubble("system", "System", systemPrompt);
+    }
+
+    messages.push({ role: "user", content: text });
+    var userBubble = addBubble("you", "You", text);
+    promptInput.value = "";
+    busy = true;
+    refreshControls();
+    setStatus("");
+    var pending = addBubble("claude", "Claude", "Thinking…", "pending");
+
+    try {
+      var payload = { model: MODEL, max_tokens: MAX_TOKENS, messages: messages };
+      if (systemPrompt) payload.system = systemPrompt;
+
+      var res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": key,
+          "anthropic-version": API_VERSION,
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      var data = null;
+      try { data = await res.json(); } catch (e) { /* non-JSON body */ }
+
+      if (!res.ok) {
+        var apiMsg = data && data.error && data.error.message ? data.error.message : "Request failed.";
+        throw new Error("API error (" + res.status + "): " + apiMsg);
+      }
+
+      var reply = (data.content || [])
+        .filter(function (b) { return b.type === "text"; })
+        .map(function (b) { return b.text; })
+        .join("\n");
+      if (!reply) reply = "(The model returned no text.)";
+
+      messages.push({ role: "assistant", content: reply });
+      pending.classList.remove("pending");
+      pending.querySelector(".body").textContent = reply;
+      if (data.stop_reason === "max_tokens") {
+        setStatus("Note: the reply was cut off at the " + MAX_TOKENS + "-token limit.");
+      }
+    } catch (err) {
+      // Roll back so history never holds two user turns in a row, and let the user retry.
+      messages.pop();
+      userBubble.remove();
+      pending.remove();
+      if (firstMessage) {
+        var sysBubble = convo.querySelector(".msg.system");
+        if (sysBubble) sysBubble.remove();
+        systemPrompt = "";
+      }
+      promptInput.value = text;
+      var msg = err && err.message ? err.message : String(err);
+      if (err instanceof TypeError) {
+        msg = "Network error. Check your connection and try again.";
+      }
+      setStatus(msg, true);
+      if (!convo.children.length) restoreEmptyState();
+    } finally {
+      busy = false;
+      refreshControls();
+      convo.scrollTop = convo.scrollHeight;
+      promptInput.focus();
+    }
+  }
+
+  function restoreEmptyState() {
+    var d = document.createElement("div");
+    d.className = "empty";
+    d.id = "emptyState";
+    d.textContent = "No messages yet. Enter a prompt below and press Send.";
+    convo.appendChild(d);
+  }
+
+  function newConversation() {
+    if (busy) return;
+    if (messages.length && !window.confirm("Start a new conversation? Export first if you want to keep this one.")) return;
+    messages = [];
+    systemPrompt = "";
+    convo.innerHTML = "";
+    restoreEmptyState();
+    promptInput.value = "";
+    sysInput.value = "";
+    techSel.value = "custom";
+    technique = "custom";
+    setStatus("");
+    refreshControls();
+    promptInput.focus();
+  }
+
+  // ---- Wiring --------------------------------------------------------------
+  toggleKey.addEventListener("click", function () {
+    var show = keyInput.type === "password";
+    keyInput.type = show ? "text" : "password";
+    toggleKey.textContent = show ? "Hide" : "Show";
+    toggleKey.setAttribute("aria-pressed", String(show));
+  });
+
+  techSel.addEventListener("change", function () {
+    if (messages.length) return;
+    technique = techSel.value;
+    var t = TECHNIQUES[technique];
+    sysInput.value = t.system;
+    promptInput.value = t.prompt;
+  });
+
+  sendBtn.addEventListener("click", send);
+  newBtn.addEventListener("click", newConversation);
+  exportBtn.addEventListener("click", doExport);
+  promptInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); send(); }
+  });
+
+  refreshControls();
+})();
+</script>
+</body>
+</html>
