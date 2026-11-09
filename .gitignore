@@ -1,0 +1,12 @@
+# Python virtual environments
+.venv/
+venv/
+__pycache__/
+
+# Local Chroma vector database
+.chroma/
+chroma/
+chroma_db/
+
+# Secrets
+.env

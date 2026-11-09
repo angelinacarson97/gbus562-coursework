@@ -1,0 +1,54 @@
+Question: What is the current rate on a 30-year fixed mortgage?
+Docs folder: larkfield-docs
+Model: claude-sonnet-5
+Top k: 5
+
+RETRIEVED CHUNKS
+
+--- Rank 1 | similarity 0.2564 | source consumer-fee-schedule.html ---
+Title: Consumer Fee Schedule (Version 8)
+Section: Stop payments
+Source: consumer-fee-schedule.html
+
+A stop payment on a check costs $30 per request. One request can cover a single check or a series of checks with consecutive numbers. A stop payment stays in effect for six months and can be renewed for another $30.
+
+--- Rank 2 | similarity 0.2480 | source share-certificates.html ---
+Title: Share Certificates (Version 5)
+Section: Dividend rates
+Source: share-certificates.html
+
+- 6-month share certificate: 3.05% annual percentage yield (APY).
+- 12-month share certificate: 3.40% APY.
+- 24-month share certificate: 3.55% APY.
+- 36-month share certificate: 3.60% APY.
+- 60-month share certificate: 3.75% APY.
+The rate is fixed when the certificate is opened and does not change during the term. Dividends are paid monthly and can stay in the certificate or be transferred to the member's savings or checking account.
+
+--- Rank 3 | similarity 0.2202 | source consumer-fee-schedule.html ---
+Title: Consumer Fee Schedule (Version 8)
+Section: Checking account monthly fees
+Source: consumer-fee-schedule.html
+
+Everyday Checking has no monthly service fee. Plus Checking has a monthly service fee of $8. The Plus Checking fee is waived for any month in which the account keeps a minimum daily balance of $1,000, or receives direct deposits totaling $500 or more.
+
+--- Rank 4 | similarity 0.1854 | source consumer-fee-schedule.html ---
+Title: Consumer Fee Schedule (Version 8)
+Section: Document information
+Source: consumer-fee-schedule.html
+
+Version 8 (current). Replaces Version 7. Owner: Member Services.
+
+--- Rank 5 | similarity 0.1826 | source share-certificates.html ---
+Title: Share Certificates (Version 5)
+Section: At maturity
+Source: share-certificates.html
+
+When a share certificate matures, it renews automatically for the same term at the rate in effect on the renewal day. The member has a 10-day grace period after maturity to withdraw the money or change the term with no penalty.
+
+ANSWER
+The provided documents do not cover mortgage rates — they only address stop payment fees, checking account fees [1][3], and share certificate dividend rates [2].
+
+Citations:
+[1] Consumer Fee Schedule (Version 8) > Stop payments (consumer-fee-schedule.html)
+[2] Share Certificates (Version 5) > Dividend rates (share-certificates.html)
+[3] Consumer Fee Schedule (Version 8) > Checking account monthly fees (consumer-fee-schedule.html)
