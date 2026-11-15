@@ -1,0 +1,47 @@
+Sender: brittany.cole@ridgelinehotels.example
+Subject: Honeymoon
+Organization: ridgeline-hotels   Model: claude-sonnet-5   Email file: 03-brittany-honeymoon.eml
+
+Tools offered to Claude: search_policy, get_leave_balance, save_reply
+
+[Claude turn 1] stop_reason=tool_use input_tokens=1371 output_tokens=87
+TOOL CALL 1: get_leave_balance {}
+RESULT 1: {"email": "brittany.cole@ridgelinehotels.example", "balances": {"pto_days": 4, "sick_days": 3}}
+TOOL CALL 2: search_policy {"query": "PTO request requirements consecutive days off"}
+RESULT 2: {"result": [{"rank": 1, "source": "pto-policy.html", "title": "Paid Time Off (PTO) Policy", "section": "Requesting PTO", "similarity": 0.7338, "text": "Title: Paid Time Off (PTO) Policy\nSection: Requesting PTO\nSource: pto-policy.html\n\nRequest PTO through your hotel's scheduling system. Requests of 4 days or fewer need your supervisor's approval at least 14 days ahead. Requests of 5 or more days in a row need your supervisor's approval at least 30 days ahead. Requests that include a blackout date need your general manager's approval."}, {"rank": 2, "source": "pto-policy.html", "title": "Paid Time Off (PTO) Policy", "section": "Borrowing PTO you haven't earned yet", "similarity": 0.5931, "text": "Title: Paid Time Off (PTO) Policy\nSection: Borrowing PTO you haven't earned yet\nSource: pto-policy.html\n\nIf a planned absence is longer than your balance, you can borrow up to 3 PTO days from what you will earn in the next six months. Borrowed days need your general manager's approval, and the request must be made at least 30 days ahead. If you leave Ridgeline before you earn the borrowed days back, their value is deducted from your final paycheck."}, {"rank": 3, "source": "pto-policy.html", "title": "Paid Time Off (PTO) Policy", "section": "Carrying PTO into next year", "similarity": 0.5891, "text": "Title: Paid Time Off (PTO) Policy\nSection: Carrying PTO into next year\nSource: pto-policy.html\n\nYou can carry up to 3 unused PTO days into the next calendar year. Any unused days above 3 are paid out at your regular rate in the first paycheck of January."}, {"rank": 4, "source": "pto-policy.html", "title": "Paid Time Off (PTO) Policy", "section": "Blackout dates", "similarity": 0.5682, "text": "Title: Paid Time Off (PTO) Policy\nSection: Blackout dates\nSource: pto-policy.html\n\nEach hotel sets up to 10 blackout dates a year, around its busiest events, and posts them in January. PTO isn't normally approved on a blackout date."}]}
+[Claude turn 2] stop_reason=tool_use input_tokens=2366 output_tokens=649
+TOOL CALL 3: save_reply {"reply_text": "<1340 characters, shown under DRAFT>", "needs_human_review": false}
+RESULT 3: Draft saved to week-04/drafts/ridgeline-hotels-03-brittany-honeymoon-20261115-125850.txt. It has not been sent.
+[Claude turn 3] stop_reason=end_turn input_tokens=3072 output_tokens=260
+Claude: I've prepared the draft reply for Brittany. Summary:
+
+- She currently has **4 PTO days**, but is requesting 6 consecutive days — a shortfall of 2 days.
+- She can **borrow up to 3 PTO days** from future accrual (GM approval needed, 30 days' notice) — source: pto-policy.html.
+- Since it's 5+ consecutive days, she also needs **supervisor approval 30 days in advance** — source: pto-policy.html. Her 2-month timeline works fine for this.
+- Flagged that she should double check her hotel's **blackout dates**, since PTO isn't normally approved on those.
+
+No sensitive topics involved, so `needs_human_review` was set to false, but the draft is saved for the People & Culture team to review before sending as usual.
+STOPPED: Claude finished (end_turn).
+
+Token usage: input=6809 output=996 total=7805 (Claude turns: 3, tool calls: 3)
+
+Draft file: week-04/drafts/ridgeline-hotels-03-brittany-honeymoon-20261115-125850.txt (not sent)
+DRAFT
+Hi Brittany,
+
+Congratulations on your upcoming wedding! 🎉
+
+Here's where things stand:
+
+- Your current PTO balance is 4 days, and you're hoping to take 6 consecutive days, so you'd be short by 2 days.
+- The good news: our PTO policy allows you to borrow up to 3 PTO days against what you'll earn in the next six months, so you could cover the gap this way. Borrowed days need your general manager's approval and must be requested at least 30 days in advance (source: pto-policy.html, "Borrowing PTO you haven't earned yet").
+- Since you're requesting 5 or more consecutive days, your supervisor's approval is also required at least 30 days ahead of the start date (source: pto-policy.html, "Requesting PTO"). Since your trip is about two months out, you're well within that window.
+- One more thing to check: if any of your honeymoon dates fall on your hotel's blackout dates, PTO isn't normally approved on those days, so it's worth confirming against your hotel's posted blackout calendar (source: pto-policy.html, "Blackout dates").
+
+I'd recommend submitting your PTO request through the scheduling system as soon as possible, noting that you'd like to borrow the extra 2 days, so your supervisor and GM have time to review it.
+
+Congratulations again, and let us know if you have any other questions!
+
+Best,
+HR Assistant, Ridgeline Hotels
+Needs human review: false

@@ -1,0 +1,37 @@
+Sender: jenna.morales@ridgelinehotels.example
+Subject: PTO question
+Organization: ridgeline-hotels   Model: claude-sonnet-5   Email file: 01-jenna-pto.eml
+
+Tools offered to Claude: search_policy, get_leave_balance, save_reply
+
+[Claude turn 1] stop_reason=tool_use input_tokens=1342 output_tokens=106
+TOOL CALL 1: get_leave_balance {}
+RESULT 1: {"email": "jenna.morales@ridgelinehotels.example", "balances": {"pto_days": 8, "sick_days": 5}}
+TOOL CALL 2: search_policy {"query": "PTO carryover to next year"}
+RESULT 2: {"result": [{"rank": 1, "source": "pto-policy.html", "title": "Paid Time Off (PTO) Policy", "section": "Carrying PTO into next year", "similarity": 0.5092, "text": "Title: Paid Time Off (PTO) Policy\nSection: Carrying PTO into next year\nSource: pto-policy.html\n\nYou can carry up to 3 unused PTO days into the next calendar year. Any unused days above 3 are paid out at your regular rate in the first paycheck of January."}, {"rank": 2, "source": "pto-policy.html", "title": "Paid Time Off (PTO) Policy", "section": "Document information", "similarity": 0.3895, "text": "Title: Paid Time Off (PTO) Policy\nSection: Document information\nSource: pto-policy.html\n\nEffective this year. Owner: People and Culture."}, {"rank": 3, "source": "pto-policy.html", "title": "Paid Time Off (PTO) Policy", "section": "Blackout dates", "similarity": 0.3821, "text": "Title: Paid Time Off (PTO) Policy\nSection: Blackout dates\nSource: pto-policy.html\n\nEach hotel sets up to 10 blackout dates a year, around its busiest events, and posts them in January. PTO isn't normally approved on a blackout date."}, {"rank": 4, "source": "pto-policy.html", "title": "Paid Time Off (PTO) Policy", "section": "Requesting PTO", "similarity": 0.3674, "text": "Title: Paid Time Off (PTO) Policy\nSection: Requesting PTO\nSource: pto-policy.html\n\nRequest PTO through your hotel's scheduling system. Requests of 4 days or fewer need your supervisor's approval at least 14 days ahead. Requests of 5 or more days in a row need your supervisor's approval at least 30 days ahead. Requests that include a blackout date need your general manager's approval."}]}
+[Claude turn 2] stop_reason=tool_use input_tokens=2237 output_tokens=308
+TOOL CALL 3: save_reply {"reply_text": "<660 characters, shown under DRAFT>", "needs_human_review": false}
+RESULT 3: Draft saved to week-04/drafts/ridgeline-hotels-01-jenna-pto-20261115-125724.txt. It has not been sent.
+[Claude turn 3] stop_reason=end_turn input_tokens=2600 output_tokens=72
+Claude: I've drafted a reply to Jenna with her current PTO balance (8 days) and the carryover policy (up to 3 days carry over, excess paid out), citing pto-policy.html. The draft has been saved for review.
+STOPPED: Claude finished (end_turn).
+
+Token usage: input=6179 output=486 total=6665 (Claude turns: 3, tool calls: 3)
+
+Draft file: week-04/drafts/ridgeline-hotels-01-jenna-pto-20261115-125724.txt (not sent)
+DRAFT
+Hi Jenna,
+
+Thanks for reaching out! Here's what I found:
+
+- You currently have 8 PTO days remaining for this year (and 5 sick days, in case that's useful).
+
+- Regarding carryover: per our PTO Policy, you can carry up to 3 unused PTO days into the next calendar year. Any unused days beyond that 3-day limit are paid out at your regular rate in your first paycheck of January. (Source: pto-policy.html)
+
+So if you end the year with your current 8 days unused, 3 would carry over and the remaining 5 would be paid out — though of course that number may change as you use PTO throughout the year.
+
+Let me know if you have any other questions!
+
+Best,
+HR Assistant
+Needs human review: false

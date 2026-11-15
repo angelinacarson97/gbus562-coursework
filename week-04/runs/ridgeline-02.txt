@@ -1,0 +1,33 @@
+Sender: kevin.walsh@ridgelinehotels.example
+Subject: Time off for a funeral
+Organization: ridgeline-hotels   Model: claude-sonnet-5   Email file: 02-kevin-bereavement.eml
+
+Tools offered to Claude: search_policy, get_leave_balance, save_reply
+
+[Claude turn 1] stop_reason=tool_use input_tokens=1822 output_tokens=165
+TOOL CALL 1: search_policy {"query": "bereavement leave policy"}
+RESULT 1: {"result": [{"rank": 1, "source": "bereavement-and-family-leave.html", "title": "Bereavement and Family Leave", "section": "Document information", "similarity": 0.7219, "text": "Title: Bereavement and Family Leave\nSection: Document information\nSource: bereavement-and-family-leave.html\n\nEffective this year. Owner: People and Culture."}, {"rank": 2, "source": "bereavement-and-family-leave.html", "title": "Bereavement and Family Leave", "section": "How to request bereavement leave", "similarity": 0.6488, "text": "Title: Bereavement and Family Leave\nSection: How to request bereavement leave\nSource: bereavement-and-family-leave.html\n\nTell your supervisor as soon as you can. No documentation is needed. Bereavement leave doesn't reduce your PTO or sick balance."}, {"rank": 3, "source": "bereavement-and-family-leave.html", "title": "Bereavement and Family Leave", "section": "Bereavement leave", "similarity": 0.6063, "text": "Title: Bereavement and Family Leave\nSection: Bereavement leave\nSource: bereavement-and-family-leave.html\n\nAfter the death of a spouse or partner, child, parent, or sibling, you receive up to 5 paid days off. After the death of a grandparent, grandchild, or in-law, you receive up to 3 paid days off. Days don't need to be taken in a row, but must be used within 60 days."}, {"rank": 4, "source": "bereavement-and-family-leave.html", "title": "Bereavement and Family Leave", "section": "Family and medical leave", "similarity": 0.5906, "text": "Title: Bereavement and Family Leave\nSection: Family and medical leave\nSource: bereavement-and-family-leave.html\n\nTeam members with at least 12 months of service can take up to 12 weeks of unpaid, job-protected leave for the birth or adoption of a child or a serious health condition, under federal law. Contact People and Culture at least 30 days ahead when you can."}]}
+[Claude turn 2] stop_reason=tool_use input_tokens=2704 output_tokens=270
+TOOL CALL 2: save_reply {"reply_text": "<563 characters, shown under DRAFT>", "needs_human_review": false}
+RESULT 2: Draft saved to week-04/drafts/ridgeline-hotels-02-kevin-bereavement-20261115-130233.txt. It has not been sent.
+[Claude turn 3] stop_reason=end_turn input_tokens=3031 output_tokens=74
+Claude: I've prepared and saved the reply to Kevin, citing the Bereavement and Family Leave policy (up to 3 paid days for a grandparent's passing, flexible scheduling within 60 days, no documentation needed).
+STOPPED: Claude finished (end_turn).
+
+Token usage: input=7557 output=509 total=8066 (Claude turns: 3, tool calls: 2)
+
+Draft file: week-04/drafts/ridgeline-hotels-02-kevin-bereavement-20261115-130233.txt (not sent)
+DRAFT
+Hi Kevin,
+
+I'm sorry for the loss of your grandmother.
+
+Per our Bereavement and Family Leave policy (bereavement-and-family-leave.html), for the death of a grandparent you're entitled to up to 3 paid days off. These days don't need to be taken consecutively, but must be used within 60 days. No documentation is required — just let your supervisor know as soon as you can. This leave does not reduce your PTO or sick balance.
+
+Please coordinate with your supervisor on which specific days you'll take.
+
+Our condolences to you and your family.
+
+Best,
+HR Assistant
+Needs human review: false
