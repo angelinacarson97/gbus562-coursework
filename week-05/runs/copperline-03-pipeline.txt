@@ -1,0 +1,90 @@
+Coordinator: pipeline   Company: Copperline Coffee Machines (copperline-coffee)   Model: claude-sonnet-5
+Email file: 03-ashgrove-burr-delay.eml
+From: Priya Raman <p.raman@ashgroveprecision.example>
+Subject: PO-5531 - BR-64 burr sets - arriving 3 days late
+API key source: ANTHROPIC_API_KEY environment variable
+
+========================================================================
+STEP 1: SUPPLY ANALYST
+========================================================================
+HANDOFF pipeline -> analyst: supplier email 03-ashgrove-burr-delay.eml (From: Priya Raman <p.raman@ashgroveprecision.example>; Subject: PO-5531 - BR-64 burr sets - arriving 3 days late)
+Analyst tools (MCP): check_coverage, get_orders_for_part, get_part
+[tokens] analyst turn 1: input=2066 output=136 stop_reason=tool_use
+  ANALYST TOOL CALL 1: get_part {"part_id": "BR-64"}
+  RESULT 1: {"part_id": "BR-64", "description": "64 mm burr set", "on_hand": 70, "supplier": "Ashgrove Precision", "scheduled_arrivals": [{"po_number": "PO-5531", "qty": 120, "arrives_in_days": 10}]}
+  ANALYST TOOL CALL 2: get_orders_for_part {"part_id": "BR-64"}
+  RESULT 2: {"part_id": "BR-64", "orders": [{"order_id": "O-2206", "customer": "Grindstone Coffee Bar", "product": "Grinder 64", "units": 30, "ship_day": 8, "parts_per_unit": 1, "parts_needed": 30, "late_penalty": false}, {"order_id": "O-2207", "customer": "Union Market Grocers", "product": "Grinder 64", "units": 60, "ship_day": 14, "parts_per_unit": 1, "parts_needed": 60, "late_penalty": true}, {"order_id": "O-2209", "customer": "Saltmarsh Inn", "product": "Grinder 64", "units": 25, "ship_day": 26, "parts_per_unit": 1, "parts_needed": 25, "late_penalty": false}], "total_parts_needed": 115}
+[tokens] analyst turn 2: input=2645 output=128 stop_reason=tool_use
+  ANALYST TOOL CALL 3: check_coverage {"part_id": "BR-64", "arrivals": [{"qty": 120, "arrives_in_days": 13}]}
+  RESULT 3: {"part_id": "BR-64", "on_hand": 70, "arrivals_used": [{"qty": 120, "arrives_in_days": 13}], "schedule": "revised", "orders": [{"order_id": "O-2206", "customer": "Grindstone Coffee Bar", "product": "Grinder 64", "units": 30, "parts_needed": 30, "ship_day": 8, "ships_complete_on_time": true, "units_short": 0, "ready_day": 8, "days_late": 0, "late_penalty": false}, {"order_id": "O-2207", "customer": "Union Market Grocers", "product": "Grinder 64", "units": 60, "parts_needed": 60, "ship_day": 14, "ships_complete_on_time": true, "units_short": 0, "ready_day": 14, "days_late": 0, "late_penalty": true}, {"order_id": "O-2209", "customer": "Saltmarsh Inn", "product": "Grinder 64", "units": 25, "parts_needed": 25, "ship_day": 26, "ships_complete_on_time": true, "units_short": 0, "ready_day": 26, "days_late": 0, "late_penalty": false}], "orders_at_risk": []}
+[tokens] analyst turn 3: input=3190 output=198 stop_reason=end_turn
+Analyst used 3 tool call(s).
+HANDOFF analyst -> pipeline: JSON brief (0 order(s) at risk)
+
+========================================================================
+ANALYST BRIEF
+========================================================================
+{
+  "part_id": "BR-64",
+  "what_changed": "PO-5531 for 120 BR-64 burr sets, originally scheduled to arrive on day 10, will now arrive on day 13 (3 days late), shipping as a single full quantity.",
+  "orders_at_risk": [],
+  "options": [],
+  "decisions_for_a_person": [],
+  "supplier_questions": [
+    "Please let me know if this causes any problems on your side."
+  ]
+}
+
+========================================================================
+STEP 2: CUSTOMER NOTICES (0 order(s) at risk)
+========================================================================
+
+========================================================================
+STEP 3: SUPPLIER REPLY
+========================================================================
+HANDOFF pipeline -> supplier writer: supplier email + brief with customer details removed:
+    {
+      "part_id": "BR-64",
+      "what_changed": "PO-5531 for 120 BR-64 burr sets, originally scheduled to arrive on day 10, will now arrive on day 13 (3 days late), shipping as a single full quantity.",
+      "impact": {
+        "orders_at_risk": 0,
+        "total_units_short": 0,
+        "per_order": []
+      },
+      "options": [],
+      "supplier_questions": [
+        "Please let me know if this causes any problems on your side."
+      ]
+    }
+[tokens] supplier writer supplier draft PO-5531 v1: input=712 output=169 stop_reason=end_turn
+HANDOFF supplier writer -> reviewer: supplier draft PO-5531 version 1 (449 characters) + the facts it was written from
+[tokens] reviewer supplier draft PO-5531 version 1: input=896 output=277 stop_reason=end_turn
+HANDOFF reviewer -> coordinator: APPROVE (version 1)
+Saved week-05/drafts/copperline-coffee/03-ashgrove-burr-delay-supplier-20261119-172800.txt (not sent)
+
+FINAL DRAFT TO SUPPLIER PO-5531
+Hello Priya,
+
+Thank you for the update. We confirm the change: PO-5531 for 120 BR-64 burr sets will now arrive on day 13 instead of day 10, a delay of 3 days.
+
+Based on our current needs, this delay does not put any orders at risk or cause a units shortfall on our side.
+
+If there is any way to ship even partially sooner, we'd welcome it, but there is no urgent problem to resolve at this time.
+
+Best regards,
+Purchasing, Copperline Coffee Machines
+Marked for a person: no
+
+
+========================================================================
+SUMMARY
+========================================================================
+Drafts saved: 1
+  - week-05/drafts/copperline-coffee/03-ashgrove-burr-delay-supplier-20261119-172800.txt (to supplier PO-5531; reviewer APPROVE; marked for a person: no)
+Drafts marked for a person: 0
+Decisions for a person: 0
+Token usage by specialist:
+  - analyst: input=7901 output=462 (3 call(s))
+  - supplier writer: input=712 output=169 (1 call(s))
+  - reviewer: input=896 output=277 (1 call(s))
+Total tokens: input=9509 output=908 total=10417

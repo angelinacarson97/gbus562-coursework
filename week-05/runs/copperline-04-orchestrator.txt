@@ -1,0 +1,30 @@
+Coordinator: orchestrator   Company: Copperline Coffee Machines (copperline-coffee)   Model: claude-sonnet-5
+Email file: 04-pelham-maintenance-closure.eml
+From: Owen Brady <o.brady@pelhamfittings.example>
+Subject: Plant maintenance closure - PO-5540 not affected
+API key source: ANTHROPIC_API_KEY environment variable
+
+========================================================================
+ORCHESTRATOR
+========================================================================
+[tokens] orchestrator turn 1: input=1500 output=255 stop_reason=tool_use
+Orchestrator: This email explicitly states PO-5540 is not affected and no action is needed. There's no change to delivery date or quantity that would impact customer orders, so no analyst, supplier reply, or customer notice is warranted.
+
+ORCHESTRATOR CHOICE 1: finish {"summary": "<shown under ORCHESTRATOR FINISH>", "needs_person_decision": false}
+RESULT 1: Finished.
+
+========================================================================
+ORCHESTRATOR FINISH
+========================================================================
+Summary for the purchasing manager: Pelham Fittings notified us of a one-week plant maintenance closure starting in 4 weeks. They explicitly confirmed our open order PO-5540 (60 SW-3 steam wands) ships before the closure and will arrive on schedule, with no action needed on our side. Since no customer orders are affected, no analysis or draft communications were required.
+A person must make a decision: no
+
+========================================================================
+SUMMARY
+========================================================================
+Drafts saved: 0
+Drafts marked for a person: 0
+Decisions for a person: 0
+Token usage by specialist:
+  - orchestrator: input=1500 output=255 (1 call(s))
+Total tokens: input=1500 output=255 total=1755
